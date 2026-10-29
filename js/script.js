@@ -29,7 +29,7 @@ async function displayPopularItems(endpoint, containerId, altTextProperty) {
               alt="${item[altTextProperty]}"
             />`
         : `<img
-              src="../images/No-image.png"
+              src="images/No-Image.png"
               class="card-img-top"
               alt="${item[altTextProperty]}"
             />`
@@ -67,7 +67,7 @@ async function displayDetails(type) {
               alt="${item.title || item.name}"
             />`
       : `<img
-              src="../images/No-image.png"
+              src="images/No-Image.png"
               class="card-img-top"
               alt="${item.title || item.name}"
             />`
@@ -177,7 +177,7 @@ function displaySearchResults(results) {
               alt="${global.search.type === 'movie' ? item.title : item.name}"
             />`
         : `<img
-              src="../images/No-image.png"
+              src="images/No-Image.png"
               class="card-img-top"
               alt="${global.search.type === 'movie' ? item.title : item.name}"
             />`
@@ -321,8 +321,13 @@ function hideSpinner() {
 // Highlight active link
 function highlightActiveLink() {
   const links = document.querySelectorAll('.nav-link');
+  const currentPage = global.currentPage.endsWith('/')
+    ? `${global.currentPage}index.html`
+    : global.currentPage;
+
   links.forEach((link) => {
-    if (link.getAttribute('href') === global.currentPage) {
+    const linkPath = new URL(link.getAttribute('href'), window.location.href).pathname;
+    if (linkPath === currentPage) {
       link.classList.add('active');
     }
   });
@@ -344,23 +349,25 @@ function addComas(number) {
 
 // Init App
 function init() {
-  switch (global.currentPage) {
-    case '/':
-    case '/index.html':
+  const page = global.currentPage.split('/').pop();
+
+  switch (page) {
+    case '':
+    case 'index.html':
       displayPopularItems('movie/popular', '#popular-movies', 'title');
       displaySlider('trending/movie/day', 'movie-details.html', 'title');
       break;
-    case '/shows.html':
+    case 'shows.html':
       displayPopularItems('tv/popular', '#popular-shows', 'name');
       displaySlider('trending/tv/week', 'tv-details.html', 'name');
       break;
-    case '/movie-details.html':
+    case 'movie-details.html':
       displayDetails('movie');
       break;
-    case '/tv-details.html':
+    case 'tv-details.html':
       displayDetails('tv');
       break;
-    case '/search.html':
+    case 'search.html':
       search();
       break;
   }
