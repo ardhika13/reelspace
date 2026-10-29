@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="description" content="Jelajahi film terbaru, temukan tontonan favorit, dan simpan ke watchlist Anda." />
+  <title>Reelspace — Movie Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="css/explorer.css" />
+  <script src="js/explorer.js" defer></script>
+</head>
+
+<body class="selection:bg-violet-500/30">
+  <header class="site-header">
+    <div class="page-shell header-content">
+      <a class="brand" href="#explore" aria-label="Reelspace beranda">
+        <span class="brand-mark" aria-hidden="true">R</span>
+        <span>reel<span class="brand-accent">space</span></span>
+      </a>
+
+      <nav class="main-nav" aria-label="Navigasi utama">
+        <button class="nav-link is-active" id="explore-tab" type="button" aria-current="page">Jelajahi</button>
+        <button class="nav-link" id="watchlist-tab" type="button">
+          Watchlist <span class="watchlist-count" id="watchlist-count">0</span>
+        </button>
+      </nav>
+
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Aktifkan mode terang">
+        <svg class="theme-icon icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
+        </svg>
+        <svg class="theme-icon icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.2 15.4A8.5 8.5 0 0 1 8.6 3.8 8.5 8.5 0 1 0 20.2 15.4Z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-section">
+      <div class="page-shell hero-content">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-dot"></span> RUANG TEMUKAN FILM BARU</p>
+          <h1>Cerita hebat.<br /><span class="gradient-text">Malam yang tepat.</span></h1>
+          <p class="hero-description">Temukan film yang cocok untuk suasana hatimu berikutnya.</p>
+
+          <form class="search-form" id="search-form" role="search">
+            <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m20 20-4-4"></path>
+            </svg>
+            <label class="sr-only" for="search-input">Cari judul film</label>
+            <input id="search-input" type="search" placeholder="Cari judul film..." autocomplete="off" />
+            <button type="submit">Cari film</button>
+          </form>
+
+          <div class="filter-panel">
+            <label class="filter-control" for="genre-filter">
+              <span>Genre</span>
+              <select id="genre-filter">
+                <option value="all">Semua genre</option>
+              </select>
+            </label>
+            <label class="rating-control" for="rating-filter">
+              <span>Rating minimum</span>
+              <span class="rating-value"><span id="rating-value">0.0</span> <span class="rating-max">/ 10</span></span>
+              <input id="rating-filter" type="range" min="0" max="10" step="0.5" value="0" />
+            </label>
+          </div>
+          <p class="filter-hint">Filter berlaku langsung pada hasil film.</p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="orbit orbit-one"></div>
+          <div class="orbit orbit-two"></div>
+          <div class="hero-glow"></div>
+          <div class="hero-poster poster-back"></div>
+          <div class="hero-poster poster-front">
+            <span class="poster-kicker">YOUR NEXT<br />FAVORITE</span>
+            <span class="poster-symbol">✳</span>
+            <span class="poster-caption">A good story<br />stays with you.</span>
+          </div>
+          <span class="floating-star star-one">✦</span>
+          <span class="floating-star star-two">✧</span>
+          <span class="floating-label">SCREEN<br />SOMETHING<br />GOOD.</span>
+        </div>
+      </div>
+      <div class="hero-grid-line" aria-hidden="true"></div>
+    </section>
+
+    <section class="page-shell latest-section" id="latest-section" aria-labelledby="latest-heading">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">BARU DI LAYAR</p>
+          <h2 id="latest-heading">Sedang tayang</h2>
+        </div>
+        <span class="section-note">Pilihan terbaru untukmu</span>
+      </div>
+      <div class="latest-grid movie-grid" id="latest-movies" aria-live="polite"></div>
+    </section>
+
+    <section class="page-shell catalog-section" id="catalog-section" aria-labelledby="catalog-heading">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker" id="catalog-kicker">PILIHAN KOMUNITAS</p>
+          <h2 id="catalog-heading">Film populer</h2>
+        </div>
+        <span class="section-note" id="result-count"></span>
+      </div>
+      <div class="movie-grid" id="movie-results" aria-live="polite"></div>
+      <div class="empty-state hidden" id="empty-state">
+        <span class="empty-icon" aria-hidden="true">✳</span>
+        <h3 id="empty-title">Belum ada film di sini</h3>
+        <p id="empty-message">Coba ubah filter atau cari judul yang lain.</p>
+      </div>
+    </section>
+
+    <section class="page-shell api-notice hidden" id="api-notice" role="alert">
+      <div class="notice-icon" aria-hidden="true">!</div>
+      <div>
+        <h2>Film belum dapat dimuat</h2>
+        <p id="error-message">Periksa koneksi internet dan coba lagi.</p>
+        <button class="retry-button" id="retry-button" type="button">Coba lagi</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="page-shell footer-content">
+      <a class="brand footer-brand" href="#explore">
+        <span class="brand-mark" aria-hidden="true">R</span>
+        <span>reel<span class="brand-accent">space</span></span>
+      </a>
+      <p>Temukan cerita berikutnya. Data film dari TMDB.</p>
+      <span class="footer-year">© <span id="current-year"></span> Reelspace</span>
+    </div>
+  </footer>
+</body>
+
+</html>
